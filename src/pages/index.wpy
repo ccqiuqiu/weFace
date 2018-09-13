@@ -1,0 +1,97 @@
+<template>
+  <view>
+    <view class="userinfo">
+      <view class="userinfo-avatar">
+        <open-data  type="userAvatarUrl"></open-data>
+      </view>
+      <open-data type="userNickName"></open-data>
+    </view>
+    <button open-type="getUserInfo">获取用户</button>
+
+    <i-cell-group>
+      <i-cell title="只显示箭头" is-link></i-cell>
+      <i-cell title="跳转到首页" is-link url="/pages/index2"></i-cell>
+      <i-cell title="只有 footer 点击有效" is-link url="/pages/index2" only-tap-footer></i-cell>
+      <i-cell title="开关">
+        <i-switch value="{{switch1}}" @change="onChange" slot="footer"></i-switch>
+      </i-cell>
+    </i-cell-group>
+
+    <i-panel title="group-水果">
+      <i-checkbox-group current="{{current}}" bindchange="handleFruitChange">
+        <i-checkbox wx:for="{{fruit}}" position="{{position}}" wx:key="{{item.id}}" value="{{item.name}}">
+        </i-checkbox>
+      </i-checkbox-group>
+    </i-panel>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '首页',
+      enablePullDownRefresh: true
+    }
+    components = {
+    }
+
+    data = {
+      switch1: false,
+      fruit: [{
+        id: 1,
+        name: '香蕉'
+      }, {
+        id: 2,
+        name: '苹果'
+      }, {
+        id: 3,
+        name: '西瓜'
+      }, {
+        id: 4,
+        name: '葡萄'
+      }],
+      current: ['苹果', '葡萄'],
+      position: 'left',
+      animal: '熊猫',
+      checked: false,
+      disabled: false
+    }
+
+    computed = {}
+
+    methods = {
+      tapImg() {
+        wepy.navigateTo({url: 'index2'})
+      },
+      onChange({ detail = {} }) {
+        console.log(detail)
+        this.switch1 = detail.value
+      },
+      handleFruitChange({ detail = {} }) {
+        const index = this.current.indexOf(detail.value)
+        index === -1 ? this.current.push(detail.value) : this.data.current.splice(index, 1)
+      }
+    }
+
+    events = {}
+  }
+</script>
+
+<style lang="less">
+  .userinfo {
+    position: relative;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .userinfo-avatar {
+    overflow:hidden;
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 50%;
+  }
+</style>

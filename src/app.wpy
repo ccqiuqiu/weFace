@@ -1,0 +1,70 @@
+<style lang="less">
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+import { setStore } from 'wepy-redux'
+import configStore from './store'
+import utils from './assets/js/utils'
+
+const store = configStore()
+setStore(store)
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',
+      'pages/index2',
+      'pages/demo'
+    ],
+    window: {
+      backgroundTextStyle: 'dark',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      selectedColor: '#ff0000',
+      list: [
+        {
+          pagePath: 'pages/index',
+          text: '首页',
+          iconPath: 'assets/img/pc.png',
+          selectedIconPath: 'assets/img/pc.png'
+        },
+        {
+          pagePath: 'pages/demo',
+          text: 'demo'
+        }
+      ]
+    }
+  }
+
+  globalData = {
+    userInfo: null
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+    this.use('promisify')
+    this.use(utils.install)
+    this.intercept('request', utils.intercept)
+  }
+
+  async onLaunch() {
+    let {data, error} = await this.$api.test()
+    console.log(data, error)
+  }
+}
+</script>
