@@ -83,7 +83,7 @@
   import wepy from 'wepy'
   import { connect } from 'wepy-redux'
   import Panel from '@/components/panel' // alias example
-  import Counter from 'counter' // alias example
+  import Counter from '@/components/counter' // alias example
   import List from '../components/list' // aliasFields example
   import Group from '../components/group'
   import testMixin from '../assets/js/mixin'
@@ -247,6 +247,9 @@
       //
       //   self.$apply()
       // })
+    }
+    onShareAppMessage(obj) {
+      console.log(obj)
     }
   }
 </script>

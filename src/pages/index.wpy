@@ -6,11 +6,12 @@
       </view>
       <open-data type="userNickName"></open-data>
     </view>
-    <button open-type="getUserInfo">获取用户</button>
+    <button open-type="getUserInfo" @getuserinfo="userInfo">获取用户</button>
+    <button open-type="openSetting" @getuserinfo="userInfo">打开设置</button>
 
     <i-cell-group>
       <i-cell title="只显示箭头" is-link></i-cell>
-      <i-cell title="跳转到首页" is-link url="/pages/index2"></i-cell>
+      <i-cell title="跳转到首页" is-link url="/pages/login"></i-cell>
       <i-cell title="只有 footer 点击有效" is-link url="/pages/index2" only-tap-footer></i-cell>
       <i-cell title="开关">
         <i-switch value="{{switch1}}" @change="onChange" slot="footer"></i-switch>
@@ -62,9 +63,6 @@
     computed = {}
 
     methods = {
-      tapImg() {
-        wepy.navigateTo({url: 'index2'})
-      },
       onChange({ detail = {} }) {
         console.log(detail)
         this.switch1 = detail.value
@@ -72,10 +70,16 @@
       handleFruitChange({ detail = {} }) {
         const index = this.current.indexOf(detail.value)
         index === -1 ? this.current.push(detail.value) : this.data.current.splice(index, 1)
+      },
+      userInfo(detail) {
+        console.log(detail)
       }
     }
 
     events = {}
+    async onLoad() {
+      await this.$api.test()
+    }
   }
 </script>
 

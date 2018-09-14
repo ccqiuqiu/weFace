@@ -1,0 +1,46 @@
+<template>
+  <i-panel title="注册">
+    <i-input value="{{user.name}}" @change="inputChange('name')" type="number" title="手机号" autofocus placeholder="请输入手机号" />
+    <i-input value="{{user.password }}" @change="inputChange('password')" type="password" title="密码" placeholder="请输入密码" />
+    <i-button @click="login" type="primary" size="default">登录</i-button>
+  </i-panel>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Login extends wepy.page {
+    config = {
+      navigationBarTitleText: '登录/注册'
+    }
+    components = {
+    }
+
+    data = {
+      user: {
+        name: '12',
+        password: ''
+      }
+    }
+
+    computed = {}
+
+    methods = {
+      inputChange(key, {detail}) {
+        this.user[key] = detail.detail.value
+      },
+      login() {
+        console.log(this.user)
+        console.log(this.$wxpage.options)
+      }
+    }
+
+    events = {}
+  }
+</script>
+
+<style lang="less">
+  .a{
+    color: aqua;
+  }
+</style>

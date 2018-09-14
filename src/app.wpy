@@ -24,7 +24,7 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
-      'pages/index2',
+      'pages/login',
       'pages/demo'
     ],
     window: {
@@ -63,6 +63,17 @@ export default class extends wepy.app {
   }
 
   async onLaunch() {
+    // wepy.checkSession()
+    //   .then(() => {
+    //     this.init()
+    //   })
+    //   .catch(async () => {
+    //     let re = await wepy.login()
+    //     wepy.showLoading({title: '登录中' + re})
+    //     this.$api.login({code: re.code})
+    //   })
+  }
+  async init() {
     let {data, error} = await this.$api.test()
     console.log(data, error)
   }
