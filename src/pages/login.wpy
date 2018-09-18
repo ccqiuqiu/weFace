@@ -1,23 +1,25 @@
 <template>
-  <block wx:if="{{isLogin}}">
-    <i-panel title="登录">
-      <i-input value="{{user.name}}" @change="inputChange('name')" type="number" title="手机号" autofocus placeholder="请输入手机号" />
-      <i-input value="{{user.password }}" @change="inputChange('password')" type="password" title="密码" placeholder="请输入密码" />
-      <i-button @click="onLogin" loading="{{loading}}" type="primary">登录</i-button>
-      <view class="flex main-between f-12 m-h-20">
-        <navigator>注册</navigator>
-        <navigator>忘记密码？</navigator>
-      </view>
+  <view wx:if="{{isLogin}}" class="{{'animated ' + (isLogin ? 'fadeIn' : '')}}">
+    <i-panel title="登录" hide-border>
+      <i-input value="{{user.name}}" @change="inputChange('name')" type="number" maxlength="11" title="手机号" autofocus placeholder="请输入手机号" />
+      <i-input value="{{user.password }}" @change="inputChange('password')" type="password" maxlength="32" title="密码" placeholder="请输入密码" />
+      <i-button @tap="onLogin" loading="{{loading}}" type="primary">登录</i-button>
     </i-panel>
-  </block>
-  <block wx:else>
-    <i-panel title="注册">
-      <i-input value="{{user.name}}" @change="inputChange('name')" type="number" title="手机号" autofocus placeholder="请输入手机号" />
-      <i-input value="{{user.password }}" @change="inputChange('password')" type="password" title="密码" placeholder="请输入密码" />
-      <i-input value="{{user.password }}" @change="inputChange('password')" type="password" title="密码" placeholder="请再次输入密码" />
-      <i-button @click="onLogin" loading="{{loading}}" type="primary" open-type="getUserInfo" @getuserinfo="onGetUserInfo">注册</i-button>
+  </view>
+  <view wx:else class="{{'animated ' + (!isLogin ? 'fadeIn' : '')}}">
+    <i-panel title="注册" hide-border>
+      <i-input value="{{user.name}}" @change="inputChange('name')" type="number" maxlength="11" title="手机号" autofocus placeholder="请输入手机号" />
+      <i-input value="{{user.password }}" @change="inputChange('password')" type="password" maxlength="32" title="密码" placeholder="请输入密码" />
+      <i-input value="{{user.password2 }}" @change="inputChange('password')" type="password" maxlength="32" title="重复密码" placeholder="请再次输入密码" />
+      <i-button @tap="onReg" loading="{{loading}}" type="primary" open-type="getUserInfo" @getuserinfo="onGetUserInfo">注册</i-button>
     </i-panel>
-  </block>
+  </view>
+
+  <view class="flex main-between f-12 m-h-20">
+    <text @tap="changeLoginOrReg">{{isLogin ? '注册': '登录'}}</text>
+    <navigator url="/pages/demo" open-type="switchTab">忘记密码？</navigator>
+  </view>
+  <i-message id="message" />
 
 </template>
 
@@ -34,46 +36,74 @@
     data = {
       isLogin: true,
       user: {
-        name: 'admin',
-        password: '123456'
+        name: '18688409494',
+        password: '123456',
+        password2: '123456'
       },
-      loading: false
+      loading: false,
+      animationData: {}
     }
 
     computed = {}
 
+    watch = {
+      isLogin (val) {
+        this.$utils.setTitle(val ? '登录' : '注册')
+      }
+    }
+
     methods = {
+      changeLoginOrReg () {
+        this.isLogin = !this.isLogin
+      },
       inputChange(key, {detail}) {
         this.user[key] = detail.detail.value
       },
       async onLogin() {
+        if (this.loading) {
+          return
+        }
         this.loading = true
         const re = await wepy.login()
-        const {data, error} = await this.$api.login({code: re.code, ...this.user})
-        this.loading = false
-        this.$apply()
-        if (error) {
-          console.log(error)
+        const {data} = await this.$api.login({code: re.code, ...this.user})
+        if (data) {
+          wepy.setStorageSync('token', data.token)
+          this.$utils.message('登录成功', 'success', 1000)
+          setTimeout(() => {
+            this.$router.switchTab(this.$wxpage.options.url || '/pages/index')
+            this.loading = false
+            this.$apply()
+          }, 1000)
         } else {
-          console.log(data)
+          this.loading = false
+          this.$apply()
         }
       },
+      onReg () {
+        if (this.loading) {
+          return
+        }
+        this.loading = true
+        this.allowReg = true
+      },
       async onGetUserInfo (info) {
+        if (!this.allowReg) {
+          return
+        }
+        this.allowReg = false
+        console.log(2)
         const re = await wepy.login()
-        const {data, error} = await this.$api.login({code: re.code, encryptedData: info.encryptedData, ...this.user})
+        const {data} = await this.$api.reg({code: re.code, encryptedData: info.detail.encryptedData, iv: info.detail.iv, ...this.user})
         this.loading = false
         this.$apply()
-        if (error) {
-          console.log(error)
+        if (data) {
+          wepy.setStorageSync('token', data.token)
+          this.$router.switchTab(this.$wxpage.options.url || '/pages/index')
         } else {
-          console.log(data)
+          this.loading = false
+          this.$apply()
         }
       }
-      // async login() {
-      //   const re = await wepy.login()
-      //   console.log(this.user, re)
-      //   console.log(this.$wxpage.options)
-      // }
     }
 
     onLoad() {

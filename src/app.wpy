@@ -4,7 +4,7 @@ import 'wepy-async-function'
 
 import { setStore } from 'wepy-redux'
 import configStore from './store'
-import utils from './assets/js/utils'
+import utils from './assets/js/index'
 const store = configStore()
 setStore(store)
 
@@ -70,4 +70,5 @@ export default class extends wepy.app {
 <style lang="less">
   @import './assets/css/base.less';
   @import './assets/css/flex.less';
+  @import './assets/css/animate.less';
 </style>

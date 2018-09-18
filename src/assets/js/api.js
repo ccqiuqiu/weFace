@@ -2,12 +2,15 @@
  * Created by 熊超超 on 2018/9/13.
  */
 import wepy from 'wepy'
+import $router from '../../assets/js/router'
+import $utils from '../../assets/js/utils'
 
 // const baseUrl = 'https://www.ccqiuqiu.win/weapi'
 const baseUrl = 'http://127.0.0.1:3000'
 // api
 export default {
   test: (data = {}) => request('get', '/v1/ddd/test', data),
+  reg: (data = {}) => request('post', '/v1/public/wxReg', data),
   login: (data = {}) => request('post', '/v1/public/wxLogin', data)
 }
 
@@ -15,7 +18,7 @@ export default {
 export const intercept = {
   config (p) {
     // 此处可以修改请求参数
-    // p.header['token'] = 'ddddd'
+    p.header['token'] = wepy.getStorageSync('token')
     if (p.url.indexOf('https://') !== 0) {
       p.url = baseUrl + p.url
     }
@@ -45,6 +48,7 @@ export const intercept = {
         message: p.errMsg
       }
     }
+    $utils.message(p.errMsg, 'error')
     // console.log('request fail: ', p)
     return p
   },
@@ -53,13 +57,15 @@ export const intercept = {
     console.log('request complete: ', p)
     if (!p.data.success) {
       if (p.data.error.code === 401) {
+        p.data.error.message = '未登录或已过期'
         /* eslint-disable no-undef */
         const pages = getCurrentPages()
-        console.log('401')
-        wepy.redirectTo({url: '/pages/login?url=' + pages[pages.length - 1].route})
+        $router.redirectTo('/pages/login?url=/' + pages[pages.length - 1].route)
+      } else if ((p.data.error.code + '').indexOf('50') === 0) {
+        p.data.error.message = '服务端异常'
       }
+      $utils.message(p.data.error.message, 'error')
     }
-    return p
   }
 }
 

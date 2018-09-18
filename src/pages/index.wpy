@@ -25,6 +25,7 @@
       </i-checkbox-group>
     </i-panel>
   </view>
+
 </template>
 
 <script>
