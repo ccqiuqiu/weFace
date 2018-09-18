@@ -9,7 +9,7 @@ import $utils from '../../assets/js/utils'
 const baseUrl = 'http://127.0.0.1:3000'
 // api
 export default {
-  test: (data = {}) => request('get', '/v1/ddd/test', data),
+  test: (data = {}) => request('get', '/v1/base/test', data),
   reg: (data = {}) => request('post', '/v1/public/wxReg', data),
   login: (data = {}) => request('post', '/v1/public/wxLogin', data)
 }

@@ -67,13 +67,7 @@
         const re = await wepy.login()
         const {data} = await this.$api.login({code: re.code, ...this.user})
         if (data) {
-          wepy.setStorageSync('token', data.token)
-          this.$utils.message('登录成功', 'success', 1000)
-          setTimeout(() => {
-            this.$router.switchTab(this.$wxpage.options.url || '/pages/index')
-            this.loading = false
-            this.$apply()
-          }, 1000)
+          this.success(data.token, '登录成功')
         } else {
           this.loading = false
           this.$apply()
@@ -97,8 +91,7 @@
         this.loading = false
         this.$apply()
         if (data) {
-          wepy.setStorageSync('token', data.token)
-          this.$router.switchTab(this.$wxpage.options.url || '/pages/index')
+          this.success(data.token, '注册成功，将自动登录')
         } else {
           this.loading = false
           this.$apply()
@@ -106,6 +99,15 @@
       }
     }
 
+    success(token, meg) {
+      wepy.setStorageSync('token', token)
+      this.$utils.message(meg, 'success', 1000)
+      setTimeout(() => {
+        this.$router.switchTab(this.$wxpage.options.url || '/pages/index')
+        this.loading = false
+        this.$apply()
+      }, 1000)
+    }
     onLoad() {
     }
     events = {}
