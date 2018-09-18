@@ -8,16 +8,21 @@ import Immutable from 'seamless-immutable'  // https://github.com/rtfeldman/seam
 import api, {intercept} from './api'
 
 const $IM = Immutable
-const $store = getStore()
+
+const $utils = {
+  setTitle: title => wepy.setNavigationBarTitle({ title })
+}
 
 export default {
   install() {
     wepy.component.prototype.$IM = $IM
-    wepy.component.prototype.$store = $store
+    wepy.component.prototype.$store = getStore()
     wepy.component.prototype.$api = api
+    wepy.component.prototype.$utils = $utils
     wepy.app.prototype.$api = api
   },
   $IM,
-  $store,
-  intercept
+  $store: getStore(),
+  intercept,
+  $utils
 }

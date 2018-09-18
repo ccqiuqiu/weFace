@@ -8,7 +8,7 @@ const baseUrl = 'http://127.0.0.1:3000'
 // api
 export default {
   test: (data = {}) => request('get', '/v1/ddd/test', data),
-  login: (data = {}) => request('get', '/v1/public/wxLogin', data)
+  login: (data = {}) => request('post', '/v1/public/wxLogin', data)
 }
 
 // 请求响应拦截器

@@ -39,18 +39,6 @@ module.exports = {
     }
   },
   plugins: {
-    autoprefixer: {
-      filter: /\.wxss$/,
-      config: {
-        browsers: [
-          'Android >= 5.0',
-          'ios >= 6',
-          'Safari >= 6',
-          'Chrome >= 12',
-          'ChromeAndroid >= 5.0'
-        ]
-      }
-    },
     iview: {
       pagePath: 'pages',
       // 可选，默认为 pages。如果页面目录不为pages，或有多个目录, 通过此值设置。
@@ -74,7 +62,7 @@ module.exports = {
         // prefix: 'a-' button的组件名为'a-button'
 
         px2: {
-          relative: 400,          // 相对值,rpx是 相对于750宽度 ；  rem，em 是相对的 font-size
+          relative: 375,          // 相对值,rpx是 相对于750宽度 ；  rem，em 是相对的 font-size
           decimalPlaces: 2,       //  保留的小数位数
           targetUnits: 'rpx'      // 目标转换的单位 支持 rpx rem em px
         }
@@ -82,6 +70,30 @@ module.exports = {
         // 参考配置：
         // px2: true
         // px2: {}
+      }
+    },
+    px2units: { // 小程序规定屏幕宽度为750rpx， 所以750px的设计稿，1px = 1rpx
+      filter: /\.wxss$/,
+      config: {
+        // divisor: 1,
+        // multiple: 1,
+        // decimalPlaces: 2,
+        // comment: 'no',
+        // targetUnits: 'rpx'
+      }
+      // 忽略 abc.wxss 文件示例
+      // filter: /(?<!\/abc)\.wxss$/i
+    },
+    autoprefixer: {
+      filter: /\.wxss$/,
+      config: {
+        browsers: [
+          'Android >= 5.0',
+          'ios >= 6',
+          'Safari >= 6',
+          'Chrome >= 12',
+          'ChromeAndroid >= 5.0'
+        ]
       }
     }
   },

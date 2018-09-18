@@ -1,0 +1,157 @@
+/**
+ * Created by 熊超超 on 2017/8/4.
+ */
+
+.flex{
+  display: flex;
+
+  // 方向
+  &.right{
+    flex-direction: row-reverse;
+  }
+  &.top{
+    flex-direction: column;
+  }
+  &.bottom{
+    flex-direction: column-reverse;
+  }
+
+  // 换行
+  &.wrap{
+    flex-wrap: wrap;
+  }
+  &.wrap-reverse{
+    flex-wrap: wrap-reverse;
+  }
+
+  // 主轴对齐
+  &.main{
+    justify-content: flex-start;
+  }
+  &.main-end{
+    justify-content: flex-end;
+  }
+  &.main-center{
+    justify-content: center;
+  }
+  &.main-between{
+    justify-content: space-between; // 2端对齐，项目间间隔相等
+  }
+  &.main-around{
+    justify-content: space-around; // 每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。
+  }
+
+  // 交叉轴对齐
+  &.cross{
+    align-items: stretch;
+  }
+  &.cross-start{
+    align-items: flex-start;
+  }
+  &.cross-end{
+    align-items: flex-end;
+  }
+  &.cross-baseline{
+    align-items: baseline;
+  }
+  &.cross-center{
+    align-items: center;
+  }
+
+  // 多根轴线对齐
+  &.align{
+    align-content: stretch;
+  }
+  &.align-start{
+    align-content: flex-start;
+  }
+  &.align-end{
+    align-content: flex-end;
+  }
+  &.align-center{
+    align-content: center;
+  }
+  &.align-between{
+    align-content: space-between;
+  }
+  &.align-around{
+    align-content: space-around;
+  }
+
+  // 项目
+  .item{
+    .generate(20);
+    .generate(@n, @i: 1) when (@i =< @n) {
+      .generate(@n, (@i + 1));
+      // 排序
+      &.order-@{i} {
+        order: @i;
+      }
+    }
+
+    .generate2(5);
+    .generate2(@n, @i: 0) when (@i =< @n) {
+      .generate2(@n, (@i + 1));
+      // 放大
+      &.grow-@{i} {
+        flex-grow: @i;
+      }
+      // 缩小
+      &.shrink-@{i} {
+        flex-shrink: @i;
+      }
+    }
+
+    // 覆盖align-items属性
+    &.self{
+      align-self: stretch;
+    }
+    &.self-start{
+      align-self: flex-start;
+    }
+    &.self-end{
+      align-self: flex-end;
+    }
+    &.self-baseline{
+      align-self: baseline;
+    }
+    &.self-center{
+      align-self: center;
+    }
+  }
+
+  // 扩展一些写法
+  &.box-mean{ // 平分
+    color: white;
+    .item, text, view, navigator{
+      flex: 1 1 0 !important;
+    }
+  }
+  &.box-first{ // 除第一个，剩下的平分
+    color: white;
+    .item, text, view, navigator{
+      flex: 1 1 0 !important;
+      &:first-child{
+        flex: 0 0 0 !important;
+      }
+    }
+  }
+  &.box-last{ // 除最后一个，剩下平分
+    color: white;
+    .item, text, view, navigator{
+      flex: 1 1 0 !important;
+      &:last-child{
+        flex: 0 0 0 !important;
+      }
+    }
+  }
+  &.box-justify{ // 2端不占剩余空间，剩下平分
+    color: white;
+    .item, text, view, navigator{
+      flex: 1 1 0 !important;
+      &:first-child, &:last-child{
+        flex: 0 0 0 !important;
+      }
+    }
+  }
+}

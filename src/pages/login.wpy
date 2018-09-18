@@ -1,9 +1,24 @@
 <template>
-  <i-panel title="注册">
-    <i-input value="{{user.name}}" @change="inputChange('name')" type="number" title="手机号" autofocus placeholder="请输入手机号" />
-    <i-input value="{{user.password }}" @change="inputChange('password')" type="password" title="密码" placeholder="请输入密码" />
-    <i-button @click="login" type="primary" size="default">登录</i-button>
-  </i-panel>
+  <block wx:if="{{isLogin}}">
+    <i-panel title="登录">
+      <i-input value="{{user.name}}" @change="inputChange('name')" type="number" title="手机号" autofocus placeholder="请输入手机号" />
+      <i-input value="{{user.password }}" @change="inputChange('password')" type="password" title="密码" placeholder="请输入密码" />
+      <i-button @click="onLogin" loading="{{loading}}" type="primary">登录</i-button>
+      <view class="flex main-between f-12 m-h-20">
+        <navigator>注册</navigator>
+        <navigator>忘记密码？</navigator>
+      </view>
+    </i-panel>
+  </block>
+  <block wx:else>
+    <i-panel title="注册">
+      <i-input value="{{user.name}}" @change="inputChange('name')" type="number" title="手机号" autofocus placeholder="请输入手机号" />
+      <i-input value="{{user.password }}" @change="inputChange('password')" type="password" title="密码" placeholder="请输入密码" />
+      <i-input value="{{user.password }}" @change="inputChange('password')" type="password" title="密码" placeholder="请再次输入密码" />
+      <i-button @click="onLogin" loading="{{loading}}" type="primary" open-type="getUserInfo" @getuserinfo="onGetUserInfo">注册</i-button>
+    </i-panel>
+  </block>
+
 </template>
 
 <script>
@@ -11,16 +26,18 @@
 
   export default class Login extends wepy.page {
     config = {
-      navigationBarTitleText: '登录/注册'
+      navigationBarTitleText: '登录'
     }
     components = {
     }
 
     data = {
+      isLogin: true,
       user: {
-        name: '12',
-        password: ''
-      }
+        name: 'admin',
+        password: '123456'
+      },
+      loading: false
     }
 
     computed = {}
@@ -29,18 +46,42 @@
       inputChange(key, {detail}) {
         this.user[key] = detail.detail.value
       },
-      login() {
-        console.log(this.user)
-        console.log(this.$wxpage.options)
+      async onLogin() {
+        this.loading = true
+        const re = await wepy.login()
+        const {data, error} = await this.$api.login({code: re.code, ...this.user})
+        this.loading = false
+        this.$apply()
+        if (error) {
+          console.log(error)
+        } else {
+          console.log(data)
+        }
+      },
+      async onGetUserInfo (info) {
+        const re = await wepy.login()
+        const {data, error} = await this.$api.login({code: re.code, encryptedData: info.encryptedData, ...this.user})
+        this.loading = false
+        this.$apply()
+        if (error) {
+          console.log(error)
+        } else {
+          console.log(data)
+        }
       }
+      // async login() {
+      //   const re = await wepy.login()
+      //   console.log(this.user, re)
+      //   console.log(this.$wxpage.options)
+      // }
     }
 
+    onLoad() {
+    }
     events = {}
   }
 </script>
 
 <style lang="less">
-  .a{
-    color: aqua;
-  }
+  @import "../assets/css/vars";
 </style>

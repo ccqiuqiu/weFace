@@ -17,12 +17,12 @@ export const actions = createActions({
 })
 
 // reducers
-export default handleActions({
+export const reducers = handleActions({
   increment (state) {
     return Immutable.update(state, 'num', val => val + 1)
   },
   decrement (state) {
-    Immutable.update(state, 'num', val => val - 1)
+    return Immutable.update(state, 'num', val => val - 1)
   },
   asyncInc (state, action) {
     return Immutable.update(state, 'asyncNum', val => val + action.payload)

@@ -1,0 +1,105 @@
+/**
+ * Created by 熊超超 on 2017/8/4.
+ */
+
+@import "./vars";
+@import "./theme";
+
+page{
+  font-size: 14 * @font;
+}
+
+// 生成从2-300，步进为2的间距样式
+.generate-space(300);
+.generate-space(@n, @i: 0) when (@i =< @n) {
+  .generate-space(@n, (@i + 2));
+  // margin
+  .m-@{i} {
+    margin-left: @i/@rem;
+    margin-right: @i/@rem;
+    margin-top: @i/@rem;
+    margin-bottom: @i/@rem;
+  }
+  .m-v-@{i} {
+    margin-top: @i/@rem;
+    margin-bottom: @i/@rem;
+  }
+  .m-h-@{i} {
+    margin-left: @i/@rem;
+    margin-right: @i/@rem;
+  }
+  .m-t-@{i} {
+    margin-top: @i/@rem;
+  }
+  .m-b-@{i} {
+    margin-bottom: @i/@rem;
+  }
+  .m-l-@{i} {
+    margin-left: @i/@rem;
+  }
+  .m-r-@{i} {
+    margin-right: @i/@rem;
+  }
+  // padding
+  .p-@{i} {
+    padding-left: @i/@rem;
+    padding-right: @i/@rem;
+    padding-top: @i/@rem;
+    padding-bottom: @i/@rem;
+  }
+  .p-v-@{i} {
+    padding-top: @i/@rem;
+    padding-bottom: @i/@rem;
+  }
+  .p-h-@{i} {
+    padding-left: @i/@rem;
+    padding-right: @i/@rem;
+  }
+  .p-t-@{i} {
+    padding-top: @i/@rem;
+  }
+  .p-b-@{i} {
+    padding-bottom: @i/@rem;
+  }
+  .p-l-@{i} {
+    padding-left: @i/@rem;
+  }
+  .p-r-@{i} {
+    padding-right: @i/@rem;
+  }
+}
+// 20, 18, 17, 16,14 13, 11(pt)
+// 说明文本，如版权等
+.f-11{
+  font-size: 11 * @font;
+}
+.f-12{
+  font-size: 12 * @font;
+}
+// 辅助信息,需弱化的信息，如链接，小按钮
+.f-13{
+  font-size: 13 * @font;
+}
+// 次要描述信息,服务于首要信息并与之关联，如列表摘要
+.f-14{
+  font-size: 14 * @font;
+}
+.f-16{
+  font-size: 16 * @font;
+}
+// 首要层次信息，如列表标题，消息气泡
+.f-17{
+  font-size: 17 * @font;
+}
+// 大按钮字体
+.f-18{
+  font-size: 18 * @font;
+}
+// 页面大标题，一般用于结果，空状态等信息单一页面
+.f-20{
+  font-size: 20 * @font;
+}
+// 只能为阿拉伯文字信息，如金额、时间
+.f-40{
+  font-size: 20 * @font;
+}

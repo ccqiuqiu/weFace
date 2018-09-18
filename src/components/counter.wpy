@@ -29,7 +29,7 @@
 <script>
   import wepy from 'wepy'
   import { connect } from 'wepy-redux'
-  import { actions } from '../store/counter'
+  import { actions } from '../store'
 
   @connect({
     a: state => state.counter.a,
