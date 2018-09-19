@@ -65,7 +65,7 @@
         }
         this.loading = true
         const re = await wepy.login()
-        const {data} = await this.$api.login({code: re.code, ...this.user})
+        const {data} = await this.$api.login({code: re.code, ...this.user}, true)
         if (data) {
           this.success(data.token, '登录成功')
         } else {
@@ -87,7 +87,7 @@
         this.allowReg = false
         console.log(2)
         const re = await wepy.login()
-        const {data} = await this.$api.reg({code: re.code, encryptedData: info.detail.encryptedData, iv: info.detail.iv, ...this.user})
+        const {data} = await this.$api.reg({code: re.code, encryptedData: info.detail.encryptedData, iv: info.detail.iv, ...this.user}, true)
         this.loading = false
         this.$apply()
         if (data) {

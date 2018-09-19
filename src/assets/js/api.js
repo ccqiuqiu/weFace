@@ -9,9 +9,14 @@ import $utils from '../../assets/js/utils'
 const baseUrl = 'http://127.0.0.1:3000'
 // api
 export default {
-  test: (data = {}) => request('get', '/v1/base/test', data),
-  reg: (data = {}) => request('post', '/v1/public/wxReg', data),
-  login: (data = {}) => request('post', '/v1/public/wxLogin', data)
+  test: (data = {}, showError) => request('get', '/v1/weFace/test', data, showError),
+  reg: (data = {}, showError) => request('post', '/v1/public/wxReg', data, showError),
+  login: (data = {}, showError) => request('post', '/v1/public/wxLogin', data, showError)
+}
+
+const errorCode = {
+  404: '接口不存在',
+  500: '服务端异常'
 }
 
 // 请求响应拦截器
@@ -32,7 +37,7 @@ export const intercept = {
         success: false,
         error: {
           code: p.statusCode,
-          message: p.errMsg
+          message: errorCode[p.statusCode]
         }
       }
     }
@@ -48,7 +53,6 @@ export const intercept = {
         message: p.errMsg
       }
     }
-    $utils.message(p.errMsg, 'error')
     // console.log('request fail: ', p)
     return p
   },
@@ -57,21 +61,29 @@ export const intercept = {
     console.log('request complete: ', p)
     if (!p.data.success) {
       if (p.data.error.code === 401) {
-        p.data.error.message = '未登录或已过期'
+        // p.data.error.message = '未登录或已过期'
         /* eslint-disable no-undef */
         const pages = getCurrentPages()
         $router.redirectTo('/pages/login?url=/' + pages[pages.length - 1].route)
-      } else if ((p.data.error.code + '').indexOf('50') === 0) {
-        p.data.error.message = '服务端异常'
       }
-      $utils.message(p.data.error.message, 'error')
+      console.error(p.data.error.message)
     }
   }
 }
 
 // 请求封装
-function request(method, url, data) {
+function request(method, url, data, showError) {
   return wepy.request({url, data, header: {}, method})
-    .then((p) => p.data.success ? {data: p.data.data} : {error: p.data.error})
-    .catch((p) => ({error: p.data.error}))
+    .then((p) => {
+      if (showError && !p.data.success) {
+        $utils.message(p.data.error.message, 'error')
+      }
+      return p.data.success ? {data: p.data.data} : {error: p.data.error}
+    })
+    .catch((p) => {
+      if (showError) {
+        $utils.message(p.data.error.message, 'error')
+      }
+      return {error: p.data.error}
+    })
 }
